@@ -1,0 +1,27 @@
+int bellman_ford(int src,int dest){
+        vector<int> dist(V,1e9);
+        dist[src]=0;
+        //relax all edges v-1 times;
+        for(int i=0;i<V-1;i++){
+            for(auto edge: li2){
+                int w = edge[0]; // w from to vector<vector<int>>li2;
+                int x =edge[1];
+                int y = edge[2];
+                if(w+dist[x]<dist[y]){
+                    dist[y]=w+dist[x];
+                }
+            }
+        }
+        // negative wt cycle
+        for(auto edge: li2){
+                int w = edge[0];
+                int x =edge[1];
+                int y = edge[2];
+                if(w+dist[x]<dist[y]){
+                    cout<<"Negative Wt cycle found";
+                    return -1;
+                }
+        }
+        return dist[dest];
+    }
+

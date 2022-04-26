@@ -1,0 +1,116 @@
+//node clas
+//Graph
+// 7 7
+// 0 1
+// 1 2
+// 3 5
+// 5 6
+// 4 5
+// 0 4
+// 3 4
+7 7
+0 1
+3 5
+5 6
+4 5
+0 4
+3 4
+
+class Graph{
+     int V;
+     list<int> *li;
+public:
+     Graph(int v){
+          V=v;
+          li = new list<int>[V];
+     }
+     void addEdge(int i,int j, bool undir=true){
+          li[i].push_back(j);
+          if(undir){
+               li[j].push_back(i);
+          }
+     }
+     void printAdjList(){
+          for(int i=0;i<V;i++){
+               cout<<i<<"---> ";
+               for(auto node : li[i]){
+                    cout<<node<< ", ";
+               }
+
+               cout<<"\n";
+          }
+     }
+     void bfs(int source,int endNode=-1){
+         queue<int>q;
+         bool* visited = new bool[V]{0};
+         int *dist = new int[V]{0};
+         int *parent = new int[V];
+         for(int i=0;i<V;i++){
+               parent[i]=-1;
+         }
+
+         q.push(source);
+         visited[source]=true;
+         parent[source]=source;
+         dist[source]=0;
+         while(!q.empty()){
+               int f = q.front();
+               //cout<<f<<"--->";
+               q.pop();
+               for(auto nbr: li[f]){
+                    if(!visited[nbr]){
+                         visited[nbr]=true;
+                         q.push(nbr);
+                         parent[nbr]=f;
+                         dist[nbr]=dist[f]+1;
+                    }
+               }
+         }
+         // all the sortest dis form sourc
+         for(int i=0;i<V;i++){
+          cout<<"sortest dis to "<<i<<" is "<<dist[i]<<nline;
+         }
+         if(endNode!=-1){
+               int temp = endNode;
+               while(temp!=source){
+                    cout<<temp<<"-->";
+                    temp = parent[temp];
+               }
+               cout<<temp<<nline;
+         }
+     }
+
+
+};
+void solve(){
+     int n,e;
+     cin>>n>>e;
+     Graph g(n);
+     while(e--){
+          int a,b;
+          cin>>a>>b;
+          g.addEdge(a,b);
+     }
+     g.bfs(0,4);
+     
+}
+//end solution
+
+
+int main(){
+
+     
+
+     init_code();
+     solve();
+     return 0;
+}
+// 4 4
+// a
+// b
+// c
+// d
+// a c
+// a d
+// b c
+// c d

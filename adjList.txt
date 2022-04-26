@@ -1,0 +1,41 @@
+//Graph
+class Graph{
+     int V;
+     list<int> *li;
+public:
+     Graph(int v){
+          V=v;
+          li = new list<int>[V];
+     }
+     void addEdge(int i,int j, bool undir=true){
+          li[i].push_back(j);
+          if(undir){
+               li[j].push_back(i);
+          }
+     }
+     void printAdjList(){
+          for(int i=0;i<V;i++){
+               cout<<i<<"---> ";
+               for(auto node : li[i]){
+                    cout<<node<< ", ";
+               }
+
+               cout<<"\n";
+          }
+     }
+
+
+};
+void solve(){
+     int n,e;
+     cin>>n>>e;
+     Graph g(n);
+     while(e--){
+          int a,b;
+          cin>>a>>b;
+          g.addEdge(a,b);
+     }
+     g.printAdjList();
+     
+}
+//end solution

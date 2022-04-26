@@ -1,0 +1,34 @@
+int find_parent(int i,vector<int>&parent){
+        if(parent[i]==-1){
+            return i;
+        }
+        return parent[i]=find_parent(parent[i],parent);
+    }
+    void unite(int i,int j,vector<int>&parent){
+        int s1 = find_parent(i,parent);
+        int s2 = find_parent(j,parent);
+        if(s1!=s2){
+            parent[s2]=s1;
+        }
+    }
+    int kruskals(int src){
+        sort(li2.begin(),li2.end());
+        int ans = 0;
+        vector<int>parent(V,-1);
+        for(auto edge: li2){
+                int w = edge[0];
+                int x =edge[1];
+                int y = edge[2];
+                if(find_parent(x,parent)!=find_parent(y,parent)){
+                    cout<<x<<" "<<y<<" "<<w<<" "<<parent[x]<<endl;
+                    unite(x,y,parent);
+                    ans+=w;
+                }
+
+        }
+
+
+    return ans;
+
+    }
+

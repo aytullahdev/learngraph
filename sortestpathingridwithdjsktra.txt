@@ -1,0 +1,73 @@
+#include<bits/stdc++.h>
+using namespace std;
+class Node{
+public:
+    int from,to,weight;
+    Node(int i,int j,int w){
+        from=i;
+        to=j;
+        weight=w;
+    }
+};
+class Compair{
+public:
+    bool operator()(const Node &left, const Node &right){
+    return left.weight<=right.weight;
+}
+};
+int main(){
+    set<Node,Compair> s;
+    int nodes,eadges;
+    //cin>>nodes>>eadges;
+    int n,m;
+    cin>>n>>m;
+    vector<vector<int>> grid(n+1,vector<int>(m+1,0));
+    vector<vector<int>> dist(n+1,vector<int>(m+1,1e7));
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            cin>>grid[i][j];
+        }
+    }
+    s.insert(Node(0,0,grid[0][0]));
+    int dx[]={0,0,1,-1};
+    int dy[]={1,-1,0,0};
+    dist[0][0]=grid[0][0];
+    while(!s.empty()){
+        auto it = s.begin();
+        int  cfrom= it->from;
+        int  cto = it->to;
+        int cd = it->weight;
+        s.erase(it);
+        for(int i=0;i<4;i++){
+            int nfrom = cfrom+dx[i];
+            int nto = cto+dy[i];
+            if(nfrom>=0 && nfrom<n && nto>=0 && nto<m && dist[nfrom][nto]>grid[nfrom][nto]+cd){
+                Node temp(nfrom,nto,dist[nfrom][nto]);
+                if(s.find(temp)!=s.end()){
+                    s.erase(s.find(temp));
+                }
+                int nd = grid[nfrom][nto]+cd;
+                dist[nfrom][nto]=nd;
+                s.insert(Node(nfrom,nto,nd));
+            }
+        }
+    }
+
+    cout<<endl;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            cout<<dist[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+ return 0;
+}
+/*
+5 5
+31 100 65 12 18
+10 13  47 157 6
+100 113 174 11 33
+88 124 41 20 140
+99 32 111 41 20
+*/
+

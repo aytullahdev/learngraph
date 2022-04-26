@@ -1,0 +1,216 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define inf 9999999
+class Graph{
+    int V;
+    list<pair<int,int>> *li;
+    list<int> *adjli;
+    vector<vector<int>> li2;
+public:
+    Graph(int v){
+        V=v;
+        li = new list<pair<int,int>>[V];
+        adjli = new list<int>[V];
+    }
+    void addEadge(int i,int j,int cost,bool undir =false){
+        li[i].push_back({cost,j});
+        adjli[i].push_back(j);
+        li2.push_back({cost,i,j});
+        if(undir){
+            li[j].push_back({cost,i});
+        }
+    }
+    int prim_mst(int src){
+    //Init a Min Heap
+    priority_queue<pair<int,int>,vector<pair<int,int>>, greater<pair<int,int>>> Q;
+
+    bool *visited = new bool[V]{false};
+    int ans = 0;
+    Q.push({0,0}); //weight,node
+    vector<pair<int,int>>path;
+    while(!Q.empty()){
+        //pick out the edge with min weight
+        auto best =Q.top();
+        Q.pop();
+        int to = best.second;
+        int w = best.first;
+        if(visited[to]){
+            //discard the edage and continue;
+            continue;
+        }
+        //otherwise take the current edge;
+        ans+=w;
+        visited[to]=true;
+
+        for(auto x: li[to]){
+            if(visited[x.second]==0){
+                Q.push({x.first,x.second});
+            }
+        }
+
+    }
+    return ans;
+    }
+    void djkshtra(int src,int dest){
+        vector<int> dist(V,1e9);
+        set<pair<int,int>> s;
+        s.insert({0,src});
+        dist[src]=0;
+        while(!s.empty()){
+            auto it = s.begin();
+            int node = it->second;
+            int dist_till_now = it->first;
+            s.erase(it);
+            for(auto nbrpair:li[node]){
+                int nbr = nbrpair.second;
+                int nbrdist = nbrpair.first;
+                if(nbrdist+dist_till_now<dist[nbr]){
+                    auto f = s.find({dist[nbr],nbr});
+                    if(f!=s.end()) s.erase(f);
+                    dist[nbr]=nbrdist+dist_till_now;
+                    s.insert({dist[nbr],nbr});
+                }
+            }
+
+
+        }
+      if(dist[dest]==1e9){
+        cout<<"NO"<<endl;
+      }else{
+        cout<<dist[dest]<<endl;
+      }
+
+    }
+    void bfs(int src, int dest){
+        queue<int>q;
+        vector<bool> visited(V,false);
+        vector<int> parent(V,0);
+        vector<int> dist(V,0);
+        visited[src]=true;
+        q.push(src);
+        dist[src]=0;
+        parent[src]=src;
+        while(!q.empty()){
+            int f = q.front();
+            q.pop();
+            for(auto nbr: adjli[f]){
+                if(!visited[nbr]){
+                    visited[nbr]=true;
+                    parent[nbr]=f;
+                    dist[nbr]=1+dist[f];
+                    q.push(nbr);
+                }
+            }
+
+        }
+        cout<<"Distance of "<<dest<<" from "<<src<<" is "<<dist[dest]<<endl;
+    }
+    int find_parent(int i,vector<int>&parent){
+        if(parent[i]==-1){
+            return i;
+        }
+        return parent[i]=find_parent(parent[i],parent);
+    }
+    void unite(int i,int j,vector<int>&parent){
+        int s1 = find_parent(i,parent);
+        int s2 = find_parent(j,parent);
+        if(s1!=s2){
+            parent[s2]=s1;
+        }
+    }
+    int kruskals(int src){
+        sort(li2.begin(),li2.end());
+        int ans = 0;
+        vector<int>parent(V,-1);
+        for(auto edge: li2){
+                int w = edge[0];
+                int x =edge[1];
+                int y = edge[2];
+                if(find_parent(x,parent)!=find_parent(y,parent)){
+                    cout<<x<<" "<<y<<" "<<w<<" "<<parent[x]<<endl;
+                    unite(x,y,parent);
+                    ans+=w;
+                }
+
+        }
+
+
+    return ans;
+
+    }
+    int bellman_ford(int src,int dest){
+        vector<int> dist(V,1e9);
+        dist[src]=0;
+        //relax all edges v-1 times;
+        for(int i=0;i<V-1;i++){
+            for(auto edge: li2){
+                int w = edge[0];
+                int x =edge[1];
+                int y = edge[2];
+                if(w+dist[x]<dist[y]){
+                    dist[y]=w+dist[x];
+                }
+            }
+        }
+        // negative wt cycle
+        for(auto edge: li2){
+                int w = edge[0];
+                int x =edge[1];
+                int y = edge[2];
+                if(w+dist[x]<dist[y]){
+                    cout<<"Negative Wt cycle found";
+                    return -1;
+                }
+        }
+        return dist[dest];
+    }
+    void floyd_warsal(){
+        vector<vector<int>> graph={
+            {0,inf,-2,inf},
+            {4,0,3,inf},
+            {inf,inf,0,2},
+            {inf,-1,inf,0}
+        };
+        for(int k=0;k<4;k++){
+            for(int i=0;i<4;i++){
+                for(int j=0;j<4;j++){
+                    if(graph[i][j]>graph[i][k]+graph[k][j]){
+                        graph[i][j]=graph[i][k]+graph[k][j];
+                    }
+                }
+            }
+        }
+        int n=4;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                cout<<graph[i][j]<<" ";
+            }
+            cout<<endl;
+        }
+    }
+
+
+};
+int main(){
+
+
+    int n,e;
+    cin>>n>>e;
+    Graph g(n+1);
+    g.floyd_warsal();
+
+
+
+
+
+}
+/*
+5 6
+0 1 1
+0 2 4
+0 3 7
+1 2 1
+2 3 2
+3 4 3
+0 4
+*/

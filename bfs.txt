@@ -1,0 +1,87 @@
+//node clas
+//Graph
+// 7 7
+// 0 1
+// 1 2
+// 3 5
+// 5 6
+// 4 5
+// 0 4
+// 3 4
+class Graph{
+     int V;
+     list<int> *li;
+public:
+     Graph(int v){
+          V=v;
+          li = new list<int>[V];
+     }
+     void addEdge(int i,int j, bool undir=true){
+          li[i].push_back(j);
+          if(undir){
+               li[j].push_back(i);
+          }
+     }
+     void printAdjList(){
+          for(int i=0;i<V;i++){
+               cout<<i<<"---> ";
+               for(auto node : li[i]){
+                    cout<<node<< ", ";
+               }
+
+               cout<<"\n";
+          }
+     }
+     void bfs(int source){
+          queue<int> q;
+          bool *visited = new bool[V]{0};
+          q.push(source);
+          visited[source]=true;
+         
+          while(!q.empty()){
+               int f = q.front();
+               cout<<f<<"-->";
+               q.pop();
+               for(auto nbr: li[f]){
+                    if(!visited[nbr]){
+                         q.push(nbr);
+                         visited[nbr]=true;
+                    }
+               }
+          }
+     }
+
+
+};
+void solve(){
+     int n,e;
+     cin>>n>>e;
+     Graph g(n);
+     while(e--){
+          int a,b;
+          cin>>a>>b;
+          g.addEdge(a,b);
+     }
+     g.bfs(1);
+     
+}
+//end solution
+
+
+int main(){
+
+     
+
+     init_code();
+     solve();
+     return 0;
+}
+// 4 4
+// a
+// b
+// c
+// d
+// a c
+// a d
+// b c
+// c d

@@ -1,0 +1,86 @@
+#include<bits/stdc++.h>
+using namespace std;
+class Graph{
+    list<pair<int,int>>*li;
+    int V;
+public:
+    Graph(int v){
+        V=v;
+        li = new list<pair<int,int>>[V];
+    }
+    void addEadge(int i,int j,int w,bool undir=true){
+        li[i].push_back({j,w});
+        if(undir){
+            li[j].push_back({i,w});
+        }
+    }
+    int djkstra(int source,int dest){
+        //data structure need
+        vector<int>dist(V,INT_MAX);
+        set<pair<int,int>> s;
+
+        dist[source]=0;
+        s.insert({source,0});
+        while(!s.empty()){
+            auto it = s.begin();
+
+            int node = it->first;
+            int curentdist = it->second;
+            s.erase(it);
+            //itrate over the nbr of the nodes;
+            for(auto nbrPair: li[node]){
+                int nbrdist =nbrPair.second;
+                int nbr = nbrPair.first;
+                if(nbrdist+curentdist<dist[nbr]){
+                    //remove if nbr alrady or exist in the set;
+                    auto f = s.find({nbr,dist[nbr]});
+                    if(f!=s.end()){
+                        s.erase(f);
+                    }
+                    //insert the update value with the new dist
+                    dist[nbr]=nbrdist+curentdist;
+                    s.insert({nbr,dist[nbr]});
+
+                }
+
+            }
+        }
+        return dist[dest];
+
+
+
+    }
+};
+int main(){
+    int n,m;
+    cin>>n>>m;
+    Graph g(n+1);
+
+    for(int i=0;i<m;i++){
+            int a,b,w;
+            cin>>a>>b>>w;
+            g.addEadge(a,b,w);
+
+
+    }
+
+   cout<<g.djkstra(0,4)<<endl;
+
+
+    return 0;
+
+}
+/*
+5 6
+0 1 1
+0 2 4
+0 3 7
+1 2 1
+2 3 2
+3 4 3
+*/
+
+
+
+
+

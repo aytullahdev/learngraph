@@ -1,0 +1,31 @@
+int prim_mst(){
+    //Init a Min Heap
+    priority_queue<pair<int,int>,vector<pair<int,int>>, greater<pair<int,int>>> Q;
+
+    bool *visited = new bool[V]{false};
+    int ans = 0;
+    Q.push({0,0}); //weight,node
+    vector<pair<int,int>>path;
+    while(!Q.empty()){
+        //pick out the edge with min weight
+        auto best =Q.top();
+        Q.pop();
+        int to = best.second;
+        int w = best.first;
+        if(visited[to]){
+            //discard the edage and continue;
+            continue;
+        }
+        //otherwise take the current edge;
+        ans+=w;
+        visited[to]=true;
+
+        for(auto x: li[to]){
+            if(visited[x.second]==0){
+                Q.push({x.first,x.second});
+            }
+        }
+
+    }
+    return ans;
+    }
