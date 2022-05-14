@@ -1,0 +1,68 @@
+
+#include<bits/stdc++.h>
+using namespace std;
+//fast I/o;
+void fastIO(){
+     ios_base::sync_with_stdio(false);
+     cin.tie(NULL);
+
+}
+void init_code(){
+    fastIO();
+     #ifdef EPSILON
+    freopen("input.txt","r",stdin);
+    freopen("output.txt","w",stdout);
+     #endif
+
+}
+
+vector<vector<int>> adjlist;
+vector<int> parents;
+int dep[10000];
+vector<int> tin,tout;
+int t=0;
+void dfs(int cur,int par){
+    parents[cur]=par;
+    dep[cur]=dep[par]+1;
+    tin[cur]=++t;
+    for(auto x: adjlist[cur]){
+        if(x != par){
+            dfs(x,cur);
+        }
+    }
+    tout[cur]=t;
+}
+int lca(int u,int v){
+    if(u==v) return u;
+    if(dep[u]<dep[v]) swap(u,v);
+    int dif = dep[u]-dep[v];
+    while(dif--){
+        u=parents[u];
+    }
+    while(u!=v){
+        u=parents[u];
+        v=parents[v];
+    }
+    return u;
+}
+int main(){
+    init_code();
+    int n,e;
+    cin>>n>>e;
+    adjlist.resize(n+1);
+    parents.resize(n+1);
+    tin.resize(n+1);
+    tout.resize(n+1);
+    for(int i=0;i<e;i++){
+        int from,to;
+        cin>>from>>to;
+        adjlist[from].push_back(to);
+    }
+
+    int x,y;
+    cin>>x>>y;
+    dfs(x,0);
+   
+    cout<<lca(4,5);
+ return 0;
+}

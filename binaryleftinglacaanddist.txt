@@ -1,0 +1,88 @@
+#include<bits/stdc++.h>
+using namespace std;
+list<int>*li;
+int parent[10000];
+int dep[10000],st[1000][20];
+void dfs(int cur,int par){
+    parent[cur]=par;
+    st[cur][0]=par;
+    for(int j=1;j<20;j++){
+        st[cur][j]=st[st[cur][j-1]][j-1];
+    }
+    dep[cur]=1+dep[par];
+    for(auto nbr : li[cur]){
+        if(nbr!=par){
+            dfs(nbr,cur);
+        }
+    }
+}
+int lca(int u,int v){
+    if(u==v) return u;
+    if(dep[u]>dep[v]) swap(u,v);
+    int deff = dep[v]-dep[u];
+    while(deff--){
+        v=parent[v];
+    }
+    while(u!=v){
+        u=parent[u];
+        v=parent[v];
+    }
+    return v;
+
+}
+int lcabl(int u,int v){
+    if(u==v) return u;
+    if(dep[u]<dep[v]) swap(u,v);
+    int diff = dep[u]-dep[v];
+    for(int j=19;j>=0;j--){
+        if((diff>>j)&1){
+            //jth bit is set;
+            u=st[u][j];
+        }
+    }
+    //u and v on the same level
+    for(int j=19;j>=0;j--){
+        if(st[u][j]!=st[v][j]){
+                //climb as much you can; at the top and go down in logn
+            u=st[u][j];
+            v=st[v][j];
+        }
+    }
+    return st[u][0];
+}
+int lenuv(int u,int v){
+    int lca = lcabl(u,v);
+    return dep[u]+dep[v]-2*dep[lca];
+}
+
+int main(){
+    int n;
+    cin>>n;
+    li = new list<int>[n+1];
+    for(int i=0;i<n-1;i++){
+        int a,b;
+        cin>>a>>b;
+        li[a].push_back(b);
+    }
+    dfs(1,0);
+    cout<<lca(9,6);
+    cout<<endl;
+    cout<<lcabl(9,6);
+    cout<<endl;
+    cout<<lenuv(9,6);
+    return 0;
+}
+/*
+12
+1 2
+1 3
+2 4
+2 5
+2 6
+3 7
+4 10
+5 8
+8 9
+8 11
+7 12
+*/
