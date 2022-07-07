@@ -42,3 +42,21 @@ int br(int num){
      }
      return r;
 }
+
+int leftOrright(int n){
+	int l,r,mid;
+	l=-1;
+	r=ar.size();
+	while(r>l+1){
+		mid = (l+r)/2;
+		//ar[l]<=x;
+		//ar[r]>x;
+		if(ar[mid]<=x){
+		   l = mid;
+		}else{
+		   r = mid;
+		}	
+
+	}
+
+}
