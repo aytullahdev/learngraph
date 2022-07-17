@@ -1,0 +1,86 @@
+const int limit=1e5+1;
+bool prime[limit];
+vector<int> primes;
+void seive(){
+     prime[1]=1;
+     prime[0]=1;
+     for(int i=2;i*i<=limit;i++){
+          if(prime[i]==false){
+               
+               for(int j=i*i;j<=limit;j+=i){
+                    prime[j]=true;
+               }
+          }
+
+     }
+     for(int i=2;i<=limit;i++){
+          if(!prime[i]){
+               primes.pb(i);
+          }
+     }
+
+}
+
+//prime factorization
+          vector<pair<int,int>> v;
+          int cnt=0;
+          for(int i=0;i<primes.size() && primes[i]*primes[i]<=inp;i++ ){
+               if(inp%primes[i]==0){
+                    cnt=0;
+                    while(inp%primes[i]==0){
+                         cnt++;
+                         inp/=primes[i];
+                    }
+                    v.pb({primes[i],cnt});
+               }
+          }
+          if(inp>1){
+               v.pb({inp,1});
+          }
+
+///
+const int limit=1e6+5;
+bool prime[limit];
+vector<ll> primes;
+void seive(){
+     prime[1]=1;
+     prime[0]=1;
+     for(int i=2;i*i<=limit;i++){
+          if(prime[i]==false){
+               
+               for(int j=i*i;j<=limit;j+=i){
+                    prime[j]=true;
+               }
+          }
+
+     }
+     for(ll i=2;i<=limit;i++){
+          if(!prime[i]){
+               primes.pb(i);
+          }
+     }
+
+}
+int countDivisor(ll n){
+     ll inp=n;
+      vector<pair<ll,ll>> v;
+          int cnt=0;
+          for(int i=0;i<(int)primes.size() && primes[i]*primes[i]<=inp;i++ ){
+               if(inp%primes[i]==0){
+                    cnt=0;
+                    while(inp%primes[i]==0){
+                         cnt++;
+                         inp/=primes[i];
+                    }
+                    v.pb({primes[i],cnt});
+               }
+          }
+          if(inp>1){
+               v.pb({inp,1});
+          }
+          int nod=1;
+           for(auto x:v){
+           nod*=(x.second+1);
+    }
+    return nod;
+}
